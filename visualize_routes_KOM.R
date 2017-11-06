@@ -1,6 +1,39 @@
 # VISUALIZE OUR ROUTES  
 ### Plot Our Segments 
 
+library(leaflet)
+library(htmlwidgets)
+
+########################
+# UTILITY FUNCTIONS
+########################
+
+# load data 
+load_segments_and_points <- function( ){
+  count        = read.table('data/count.txt', sep="\t")
+  count        = count$x
+  
+  api_count        = read.table('data/api_count.txt', sep="\t")
+  api_count        = api_count$x
+  
+  all_segments = dbReadTable(db, 'all_segments')
+  points = dbReadTable(db, 'points')
+  city = rep("Chicago", dim(points)[1])
+  points$city = city
+  
+  
+  out = list()
+  out$all_segments = as.data.frame(all_segments)
+  out$points = points
+  out$count = count 
+  out$api_count = api_count
+  
+  return(out)
+}
+
+########################
+# PLOTTING FUNCTION 
+########################
 # Define function for leaflet plot of only a country
 leaf_country <- function(df, location,
                           limit = NULL,
@@ -47,7 +80,14 @@ leaf_country <- function(df, location,
   return(l)
 }
 
-chicago <- leaf_country(out$points, location = 'Chicago', city = TRUE)
+
+########################
+# PLOT THE DATA 
+########################
+
+out2 = load_segments_and_points()
+message( paste0( 'Number of Segments = ', out2$count))
+chicago <- leaf_country(out2$points, location = 'Chicago', city = TRUE)
 saveWidget(chicago, paste0(getwd(), '/widgets/Chicago.html'),
            selfcontained = TRUE)
 

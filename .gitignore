@@ -1,0 +1,12 @@
+data/*
+credentials/*
+issues.rtf
+spatial/*
+widgets/*
+databrew.R
+chicago_strava.sqlite
+explore_sqllite.R
+widgets.zip
+.DS_Store
+.RData
+.Rhistory
