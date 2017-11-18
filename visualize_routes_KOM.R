@@ -4,12 +4,16 @@
 library(leaflet)
 library(htmlwidgets)
 
+setwd('~/git_repos/KQOM')
+
 ########################
 # UTILITY FUNCTIONS
 ########################
 
 # load data 
 load_segments_and_points <- function( ){
+  
+  db <- dbConnect(SQLite(), dbname="chicago_strava.sqlite")
   count        = read.table('data/count.txt', sep="\t")
   count        = count$x
   
@@ -17,7 +21,12 @@ load_segments_and_points <- function( ){
   api_count        = api_count$x
   
   all_segments = dbReadTable(db, 'all_segments')
+  all_segments$activity_id = NULL
+  all_segments$south_west_box_id = NULL 
+  
   points = dbReadTable(db, 'points')
+  points = unique(points)
+  
   city = rep("Chicago", dim(points)[1])
   points$city = city
   
@@ -27,6 +36,8 @@ load_segments_and_points <- function( ){
   out$points = points
   out$count = count 
   out$api_count = api_count
+  
+  dbDisconnect(db)
   
   return(out)
 }

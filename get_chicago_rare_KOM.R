@@ -85,12 +85,17 @@ dbSendQuery(conn = db,
             end_lon NUMERIC, 
             numleads INTEGER, 
             numentries INTEGER, 
-            activity_id INTEGER
+            activity_id INTEGER,
             south_west_box_id INTEGER 
             )"
 )
 
-dbSendQuery(conn = db, "DROP TABLE all_segments")
+## DROP TABLES if we screwed something up and restart idx
+# dbSendQuery(conn = db, "DROP TABLE all_segments")
+# dbSendQuery(conn = db, "DROP TABLE points")
+# startidx = 1
+# write.table( startidx, 'data/last_south_west_box_idx.txt', sep = "\t")
+
 
 ########################
 # MAIN FUNCTION 
